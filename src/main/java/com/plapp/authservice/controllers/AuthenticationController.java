@@ -2,6 +2,7 @@ package com.plapp.authservice.controllers;
 
 import com.plapp.authservice.entity.UserCredentials;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
+import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.authservice.services.UserCredentialsService;
 import org.lists.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,15 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserCredentialsService userCredentialsService;
+
+    private JWTAuthenticationManager jwtAuthenticationManager;
 
     public AuthenticationController(UserCredentialsRepository userCredentialsRepository,
-                                    BCryptPasswordEncoder passwordEncoder) {
+                                    BCryptPasswordEncoder passwordEncoder,
+                                    JWTAuthenticationManager jwtAuthenticationManager) {
         this.userCredentialsRepository = userCredentialsRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtAuthenticationManager = jwtAuthenticationManager;
     }
 
     public boolean userExists(UserCredentials credentials) {
@@ -72,7 +75,8 @@ public class AuthenticationController {
         }
 
         // Generate JWT token here
-        String JWT = "asdfghj";
+        UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
+        String JWT = jwtAuthenticationManager.buildJWT(existingUser);
 
         return new ApiResponse(true, "Bearer " + JWT);
     }
