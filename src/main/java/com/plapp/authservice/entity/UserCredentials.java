@@ -14,6 +14,10 @@ public class UserCredentials {
 
     private String password;
 
+    public long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
