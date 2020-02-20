@@ -3,23 +3,17 @@ package com.plapp.authservice.controllers;
 import com.plapp.authservice.entity.UserCredentials;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import com.plapp.authservice.security.JWTAuthenticationManager;
-import com.plapp.authservice.services.UserCredentialsService;
-import org.lists.utils.Lists;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,15 +24,13 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
+    @Autowired
     private JWTAuthenticationManager jwtAuthenticationManager;
 
     public AuthenticationController(UserCredentialsRepository userCredentialsRepository,
-                                    BCryptPasswordEncoder passwordEncoder,
-                                    JWTAuthenticationManager jwtAuthenticationManager) {
+                                    BCryptPasswordEncoder passwordEncoder) {
         this.userCredentialsRepository = userCredentialsRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtAuthenticationManager = jwtAuthenticationManager;
     }
 
     public boolean userExists(UserCredentials credentials) {
@@ -74,10 +66,15 @@ public class AuthenticationController {
             return new ApiResponse(false, "Invalid credentials");
         }
 
-        // Generate JWT token here
         UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
         String JWT = jwtAuthenticationManager.buildJWT(existingUser);
 
         return new ApiResponse(true, "Bearer " + JWT);
+    }
+
+
+    @PostMapping("/authorize")
+    public Claims authorize(@RequestBody String jwt) {
+        return jwtAuthenticationManager.verifyJWT(jwt);
     }
 }

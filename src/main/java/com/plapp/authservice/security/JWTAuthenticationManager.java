@@ -2,6 +2,7 @@ package com.plapp.authservice.security;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.plapp.authservice.entity.UserCredentials;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import net.bytebuddy.asm.Advice;
@@ -11,19 +12,16 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.crypto.Data;
 import java.security.Key;
 import java.util.Date;
 
 @Component
-@EnableConfigurationProperties(JWTAuthenticationProperties.class)
+//@EnableConfigurationProperties(JWTAuthenticationProperties.class)
 public class JWTAuthenticationManager {
 
-    private JWTAuthenticationProperties properties;
-
     @Autowired
-    public JWTAuthenticationManager(JWTAuthenticationProperties properties) {
-        this.properties = properties;
-    }
+    private JWTAuthenticationProperties properties;
 
     public String buildJWT(UserCredentials credentials) {
         long currentMillis = System.currentTimeMillis();
@@ -35,7 +33,7 @@ public class JWTAuthenticationManager {
 
         JwtBuilder jwtBuilder = Jwts.builder().setId(String.valueOf(credentials.getId()))
                                               .setIssuedAt(now)
-                                              .setSubject(credentials.getEmail())
+                                              .setSubject(String.valueOf(credentials.getId()))
                                               .signWith(properties.getAlgorithm(), signingKey);
 
         if (properties.getExpiration() > 0) {
@@ -44,5 +42,13 @@ public class JWTAuthenticationManager {
         }
 
         return jwtBuilder.compact();
+    }
+
+    public Claims verifyJWT(String jwt) {
+        Claims claims = Jwts.parser()
+                            .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getSigningKey()))
+                            .parseClaimsJws(jwt)
+                            .getBody();
+        return claims;
     }
 }
