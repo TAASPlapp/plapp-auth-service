@@ -56,6 +56,9 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ApiResponse logIn(@RequestBody UserCredentials credentials) {
+        if (credentials.getPassword() == null || credentials.getEmail() == null)
+            return new ApiResponse(false, "Missing credentials");
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     credentials.getEmail(),
@@ -63,13 +66,13 @@ public class AuthenticationController {
             ));
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             // Best if we dont reveal the email exists in our db
-            return new ApiResponse(false, "Invalid credentials");
+            return new ApiResponse(false, "Invalid credentialz");
         }
 
         UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
         String JWT = jwtAuthenticationManager.buildJWT(existingUser);
 
-        return new ApiResponse(true, "Bearer " + JWT);
+        return new ApiResponse(true, JWT);
     }
 
 
