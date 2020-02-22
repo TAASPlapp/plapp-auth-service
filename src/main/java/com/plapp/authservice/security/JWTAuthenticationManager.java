@@ -1,7 +1,7 @@
 package com.plapp.authservice.security;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
-import com.plapp.authservice.entity.UserCredentials;
+import com.plapp.entities.auth.UserCredentials;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;

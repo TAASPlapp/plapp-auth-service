@@ -1,7 +1,7 @@
 package com.plapp.authservice.services;
 
-import com.plapp.authservice.entity.UserCredentials;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
+import com.plapp.entities.auth.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

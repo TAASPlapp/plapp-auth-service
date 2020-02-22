@@ -1,8 +1,8 @@
 package com.plapp.authservice.controllers;
 
-import com.plapp.authservice.entity.UserCredentials;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import com.plapp.authservice.security.JWTAuthenticationManager;
+import com.plapp.entities.auth.UserCredentials;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,7 +66,7 @@ public class AuthenticationController {
             ));
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             // Best if we dont reveal the email exists in our db
-            return new ApiResponse(false, "Invalid credentialz");
+            return new ApiResponse(false, "Invalid credentials");
         }
 
         UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());

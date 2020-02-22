@@ -1,6 +1,6 @@
 package com.plapp.authservice.repositories;
 
-import com.plapp.authservice.entity.UserCredentials;
+import com.plapp.entities.auth.UserCredentials;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserCredentialsRepository extends JpaRepository<UserCredentials, Integer> {
