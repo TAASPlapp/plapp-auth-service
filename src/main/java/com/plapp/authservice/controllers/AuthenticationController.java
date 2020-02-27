@@ -1,16 +1,15 @@
 package com.plapp.authservice.controllers;
 
-import com.plapp.authservice.repositories.UserCredentialsRepository;
-import com.plapp.authservice.security.JWTAuthenticationManager;
+
+import com.plapp.authservice.services.UserCredentialsService;
 import com.plapp.entities.auth.UserCredentials;
 import com.plapp.entities.utils.ApiResponse;
 import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.HibernateError;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,67 +17,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthenticationController {
-    private BCryptPasswordEncoder passwordEncoder;
-    private UserCredentialsRepository userCredentialsRepository;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JWTAuthenticationManager jwtAuthenticationManager;
-
-    public AuthenticationController(UserCredentialsRepository userCredentialsRepository,
-                                    BCryptPasswordEncoder passwordEncoder) {
-        this.userCredentialsRepository = userCredentialsRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public boolean userExists(UserCredentials credentials) {
-        System.out.println("Checking if user " + credentials.getEmail() + " exists");
-        UserCredentials existing = userCredentialsRepository.findByEmail(credentials.getEmail());
-        System.out.println(existing);
-
-        return existing != null;
-    }
+    private final UserCredentialsService userCredentialsService;
 
     @PostMapping("/signup")
     public ApiResponse signUp(@RequestBody UserCredentials credentials) {
-        if (userExists(credentials)) {
-            return new ApiResponse(false, "User already exists");
-        }
 
-        System.out.println("Signing up user: " + credentials.getEmail() + " " + credentials.getPassword());
-        credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
-        userCredentialsRepository.save(credentials);
+        try {
+            userCredentialsService.createUser(credentials);
+        } catch (IllegalArgumentException e) {
+            return new ApiResponse(false, e.getMessage());
+        } catch (HibernateError e) {
+            return new ApiResponse(false, "Could not create user:" + e.getMessage());
+        }
 
         return new ApiResponse();
     }
 
     @PostMapping("/login")
     public ApiResponse logIn(@RequestBody UserCredentials credentials) {
-        if (credentials.getPassword() == null || credentials.getEmail() == null)
-            return new ApiResponse(false, "Missing credentials");
+        String jwt = null;
 
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    credentials.getEmail(),
-                    credentials.getPassword()
-            ));
+            jwt = userCredentialsService.authenticateUser(credentials);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             // Best if we dont reveal the email exists in our db
             return new ApiResponse(false, "Invalid credentials");
         }
 
-        UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
-        String JWT = jwtAuthenticationManager.buildJWT(existingUser);
-
-        return new ApiResponse(true, JWT);
+        return new ApiResponse(true, jwt);
     }
 
 
     @PostMapping("/authorize")
     public Claims authorize(@RequestBody String jwt) {
-        return jwtAuthenticationManager.verifyJWT(jwt);
+        try {
+            return userCredentialsService.verifyJWT(jwt);
+        } catch (SignatureException e) {
+            return null;
+        }
     }
 }
