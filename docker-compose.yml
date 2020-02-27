@@ -18,16 +18,32 @@ services:
 
 
   plapp-auth-service:
-    image: openjdk:8-jdk-alpine
+    image: maven:latest
+    working_dir: $PWD
     container_name: plapp-auth-service
     volumes:
-      - .:/auth-service
-    ports:
-      - 8081:8080
+      - $PWD:$PWD
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.m2:/root/.m2
+    expose:
+      - "8080"
+    command: mvn spring-boot:run
     networks:
-        - auth-network
-    restart: always
-    entrypoint: java -jar /auth-service/target/auth-service-0.0.1-SNAPSHOT.jar
+      - auth-network
+    depends_on:
+      - plapp-auth-db
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - plapp-auth-service
+    ports:
+      - "4000:4000"
+    networks:
+      - auth-network
+
 volumes:
   database-data:
 
