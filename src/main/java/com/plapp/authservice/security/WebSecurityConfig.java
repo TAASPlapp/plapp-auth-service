@@ -1,5 +1,6 @@
 package com.plapp.authservice.security;
 
+import com.plapp.authservice.services.SpringUserService;
 import com.plapp.authservice.services.UserCredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserCredentialsService userCredentialsService;
+    private SpringUserService springUserService;
 
     @Bean
     public AuthenticationManager getAuthenticationManager() throws Exception {
@@ -33,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userCredentialsService).passwordEncoder(bCryptPasswordEncoder);
+        builder.userDetailsService(springUserService).passwordEncoder(bCryptPasswordEncoder);
     }
 
 

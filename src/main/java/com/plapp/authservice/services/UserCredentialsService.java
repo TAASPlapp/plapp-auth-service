@@ -19,21 +19,11 @@ import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
-public class UserCredentialsService implements UserDetailsService {
+public class UserCredentialsService  {
     private final UserCredentialsRepository userCredentialsRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTAuthenticationManager jwtAuthenticationManager;
-
-    public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserCredentials credentials = userCredentialsRepository.findByEmail(email);
-
-        if (credentials == null) {
-            throw new UsernameNotFoundException(email);
-        }
-
-        return new User(credentials.getEmail(), credentials.getPassword(), new ArrayList<>());
-    }
 
     public UserCredentials createUser(UserCredentials userCredentials) {
         if (userCredentialsRepository.findByEmail(userCredentials.getEmail()) != null)
