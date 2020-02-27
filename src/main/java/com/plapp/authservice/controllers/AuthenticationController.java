@@ -5,6 +5,7 @@ import com.plapp.authservice.services.UserCredentialsService;
 import com.plapp.entities.auth.UserCredentials;
 import com.plapp.entities.utils.ApiResponse;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.HibernateError;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -51,6 +52,10 @@ public class AuthenticationController {
 
     @PostMapping("/authorize")
     public Claims authorize(@RequestBody String jwt) {
-        return userCredentialsService.verifyJWT(jwt);
+        try {
+            return userCredentialsService.verifyJWT(jwt);
+        } catch (SignatureException e) {
+            return null;
+        }
     }
 }
