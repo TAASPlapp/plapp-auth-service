@@ -4,6 +4,9 @@ import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.entities.auth.UserCredentials;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,7 +51,7 @@ public class UserCredentialsService  {
         return jwtAuthenticationManager.buildJWT(existingUser);
     }
 
-    public Claims verifyJWT(String jwt) {
-        return jwtAuthenticationManager.verifyJWT(jwt);
+    public void verifyJwt(String jwt) throws JwtException {
+        jwtAuthenticationManager.verifyJwt(jwt);
     }
 }

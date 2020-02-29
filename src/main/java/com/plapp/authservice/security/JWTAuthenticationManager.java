@@ -1,9 +1,7 @@
 package com.plapp.authservice.security;
 
 import com.plapp.entities.auth.UserCredentials;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,11 +37,9 @@ public class JWTAuthenticationManager {
         return jwtBuilder.compact();
     }
 
-    public Claims verifyJWT(String jwt) {
-        Claims claims = Jwts.parser()
-                            .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getSigningKey()))
-                            .parseClaimsJws(jwt)
-                            .getBody();
-        return claims;
+    public void verifyJwt(String jwt) throws JwtException {
+        Jwts.parser()
+           .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getSigningKey()))
+           .parseClaimsJws(jwt);
     }
 }
