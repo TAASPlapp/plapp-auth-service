@@ -1,0 +1,4 @@
+1. api-gateway forwards credentials for user creation
+2. auth-service creates user and add default authorization to update authorities
+3. api-gateway (knows all th endpoint) sets all the required uri regex (with empty values)
+
