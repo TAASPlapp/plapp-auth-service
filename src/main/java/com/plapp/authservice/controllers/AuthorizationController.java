@@ -16,10 +16,10 @@ public class AuthorizationController {
 
     @PostMapping("/{userId}/update")
     public ApiResponse<String> updateAuthorization(@PathVariable Long userId,
-                                                   @RequestParam String url,
+                                                   @RequestParam String urlRegex,
                                                    @RequestParam Long value) {
         try {
-            authorizationService.addResourceAuthorityValue(userId, url, value);
+            authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
             String jwt = authorizationService.buildJwtWithAuthorizations(userId);
             return new ApiResponse<>(true, null, jwt);
 
@@ -32,10 +32,10 @@ public class AuthorizationController {
 
     @PostMapping("/{userId}/remove")
     public ApiResponse<String> removeAuthorization(@PathVariable long userId,
-                                                   @RequestParam String url,
+                                                   @RequestParam String urlRegex,
                                                    @RequestParam long value) {
         try {
-            authorizationService.removeResourceAuthorityValue(userId, url, value);
+            authorizationService.removeResourceAuthorityValue(userId, urlRegex, value);
             String jwt = authorizationService.buildJwtWithAuthorizations(userId);
             return new ApiResponse<>(true, null, jwt);
 

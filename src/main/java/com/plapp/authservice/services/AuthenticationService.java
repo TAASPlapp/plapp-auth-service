@@ -40,7 +40,7 @@ public class AuthenticationService {
         // granted authorities
         authorizationService.addResourceAuthority(
                 savedCredentials.getId(),
-                "/auth/([0-9]+)/((\bupdate\b)|(\bremove))",
+                "/auth/([0-9]+)/((\\bupdate\\b)|(\\bremove\\b))",
                 new ArrayList<Long>(){{ add(savedCredentials.getId()); }});
 
 
