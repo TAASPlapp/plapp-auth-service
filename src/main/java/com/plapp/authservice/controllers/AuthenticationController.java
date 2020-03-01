@@ -2,7 +2,6 @@ package com.plapp.authservice.controllers;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.plapp.authservice.mappers.UserCredentialsMapper;
 import com.plapp.authservice.services.AuthenticationService;
 import com.plapp.entities.auth.UserCredentials;
 import com.plapp.entities.utils.ApiResponse;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService userCredentialsService;
-    private final UserCredentialsMapper userCredentialsMapper;
 
     @PostMapping("/signup")
     public ApiResponse<UserCredentials> signUp(@RequestBody UserCredentials credentials) {
