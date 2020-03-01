@@ -1,7 +1,6 @@
 package com.plapp.authservice.security;
 
 import com.plapp.authservice.services.SpringUserService;
-import com.plapp.authservice.services.UserCredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

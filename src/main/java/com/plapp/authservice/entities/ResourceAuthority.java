@@ -1,5 +1,6 @@
 package com.plapp.authservice.entities;
 
+import com.plapp.entities.auth.UserCredentials;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

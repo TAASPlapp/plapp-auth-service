@@ -1,38 +1,42 @@
 package com.plapp.authservice.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plapp.authservice.entities.ResourceAuthority;
-import com.plapp.authservice.entities.UserCredentialsDPO;
+import com.plapp.authservice.repositories.ResourceAuthorityRepository;
 import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
-import io.jsonwebtoken.JwtException;
+import com.plapp.entities.auth.UserCredentials;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
-public class UserCredentialsService  {
+public class AuthenticationService {
     private final UserCredentialsRepository userCredentialsRepository;
+    private final ResourceAuthorityRepository resourceAuthorityRepository;
+
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTAuthenticationManager jwtAuthenticationManager;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    public UserCredentialsDPO createUser(UserCredentialsDPO userCredentials) {
+    public UserCredentials createUser(UserCredentials userCredentials) {
         if (userCredentialsRepository.findByEmail(userCredentials.getEmail()) != null)
             throw new IllegalArgumentException("Email already exists");
 
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
-        UserCredentialsDPO savedCredentials = userCredentialsRepository.save(userCredentials);
+        UserCredentials savedCredentials = userCredentialsRepository.save(userCredentials);
 
 
         try {
@@ -44,21 +48,16 @@ public class UserCredentialsService  {
         ResourceAuthority writeCredentialsAuthority = new ResourceAuthority();
         writeCredentialsAuthority.setAuthority("/auth/([0-9]+)/((\bupdate\b)|(\bremove))");
         writeCredentialsAuthority.addValue(savedCredentials.getId());
-        savedCredentials.addResourceAuthority(writeCredentialsAuthority);
+        writeCredentialsAuthority.addValue(5656L);
+        writeCredentialsAuthority.setUserId(savedCredentials.getId());
+        resourceAuthorityRepository.save(writeCredentialsAuthority);
 
-
-        UserCredentialsDPO updatedCredentials = userCredentialsRepository.save(savedCredentials);
-        try {
-            System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(updatedCredentials));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return updatedCredentials;
+        return savedCredentials;
     }
 
-    public String authenticateUser(UserCredentialsDPO credentials) throws UsernameNotFoundException,
-                                                                       BadCredentialsException {
+    public String authenticateUser(UserCredentials credentials) throws UsernameNotFoundException,
+                                                                       BadCredentialsException,
+                                                                       JsonProcessingException {
         if (credentials.getPassword() == null || credentials.getEmail() == null)
             throw new IllegalArgumentException("Missing credentials");
 
@@ -69,18 +68,15 @@ public class UserCredentialsService  {
                 credentials.getPassword()
         ));
 
-        System.out.println("This motherfucker has authorities: ");
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
         try {
-            System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(authentication));
+            System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(authorities));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        UserCredentialsDPO existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
-        return jwtAuthenticationManager.buildJWT(existingUser);
-    }
-
-    public void verifyJwt(String jwt) throws JwtException {
-        jwtAuthenticationManager.verifyJwt(jwt);
+        UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
+        return jwtAuthenticationManager.buildJWT(existingUser, authorities);
     }
 }

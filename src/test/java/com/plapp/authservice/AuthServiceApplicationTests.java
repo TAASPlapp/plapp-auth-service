@@ -2,7 +2,6 @@ package com.plapp.authservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.plapp.authservice.entities.ResourceAuthority;
-import com.plapp.authservice.entities.UserCredentialsDPO;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ class AuthServiceApplicationTests {
 
     @Test
     void testAuthorities() throws Exception {
-        UserCredentialsDPO userCredentialsDPO = new UserCredentialsDPO();
+        /*UserCredentialsDPO userCredentialsDPO = new UserCredentialsDPO();
         userCredentialsDPO.setEmail("auth@email");
         userCredentialsDPO.setPassword("password");
         ResourceAuthority authority = new ResourceAuthority();
@@ -47,6 +46,6 @@ class AuthServiceApplicationTests {
 
         ObjectMapper objectMapper = new ObjectMapper();
         System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(saved1));
-        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(saved2));
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(saved2));*/
     }
 }
