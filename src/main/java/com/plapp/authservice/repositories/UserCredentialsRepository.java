@@ -1,8 +1,11 @@
 package com.plapp.authservice.repositories;
 
-import com.plapp.entities.auth.UserCredentials;
+import com.plapp.authservice.entities.ResourceAuthority;
+import com.plapp.authservice.entities.UserCredentialsDPO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserCredentialsRepository extends JpaRepository<UserCredentials, Integer> {
-    UserCredentials findByEmail(String email);
+import java.util.List;
+
+public interface UserCredentialsRepository extends JpaRepository<UserCredentialsDPO, Integer> {
+    UserCredentialsDPO findByEmail(String email);
 }

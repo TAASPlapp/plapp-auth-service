@@ -1,6 +1,6 @@
 package com.plapp.authservice.security;
 
-import com.plapp.entities.auth.UserCredentials;
+import com.plapp.authservice.entities.UserCredentialsDPO;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class JWTAuthenticationManager {
     @Autowired
     private JWTAuthenticationProperties properties;
 
-    public String buildJWT(UserCredentials credentials) {
+    public String buildJWT(UserCredentialsDPO credentials) {
         long currentMillis = System.currentTimeMillis();
         Date now = new Date(currentMillis);
 

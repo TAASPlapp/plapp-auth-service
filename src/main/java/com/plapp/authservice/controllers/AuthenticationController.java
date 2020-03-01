@@ -1,6 +1,8 @@
 package com.plapp.authservice.controllers;
 
 
+import com.plapp.authservice.entities.UserCredentialsDPO;
+import com.plapp.authservice.mappers.UserCredentialsMapper;
 import com.plapp.authservice.services.UserCredentialsService;
 import com.plapp.entities.auth.UserCredentials;
 import com.plapp.entities.utils.ApiResponse;
@@ -24,13 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final UserCredentialsService userCredentialsService;
+    private final UserCredentialsMapper userCredentialsMapper;
 
     @PostMapping("/signup")
     public ApiResponse<UserCredentials> signUp(@RequestBody UserCredentials credentials) {
 
         try {
-            UserCredentials savedUserCredentials = userCredentialsService.createUser(credentials);
+            UserCredentialsDPO credentialsDPO = userCredentialsMapper.userCredentialsToUserCredentialsDPO(credentials);
+            UserCredentialsDPO savedUserCredentialsDPO = userCredentialsService.createUser(credentialsDPO);
+
             // not really a good idea to send the password back
+            UserCredentials savedUserCredentials = userCredentialsMapper.userCredentialsDPOToUserCredentials(savedUserCredentialsDPO);
             savedUserCredentials.setPassword("");
             return new ApiResponse<>(savedUserCredentials);
         } catch (IllegalArgumentException e) {
@@ -43,7 +49,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ApiResponse<String> logIn(@RequestBody UserCredentials credentials) {
         try {
-            String jwt = userCredentialsService.authenticateUser(credentials);
+            String jwt = userCredentialsService.authenticateUser(
+                    userCredentialsMapper.userCredentialsToUserCredentialsDPO(credentials)
+            );
             return new ApiResponse<>(jwt);
 
         } catch (UsernameNotFoundException | BadCredentialsException e) {

@@ -1,6 +1,6 @@
 package com.plapp.authservice.services;
 
-import com.plapp.entities.auth.UserCredentials;
+import com.plapp.authservice.entities.UserCredentialsDPO;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -16,12 +16,12 @@ public class SpringUserService implements UserDetailsService {
     private final UserCredentialsRepository userCredentialsRepository;
 
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserCredentials credentials = userCredentialsRepository.findByEmail(email);
+        UserCredentialsDPO credentials = userCredentialsRepository.findByEmail(email);
 
         if (credentials == null) {
             throw new UsernameNotFoundException(email);
         }
 
-        return new User(credentials.getEmail(), credentials.getPassword(), new ArrayList<>());
+        return new User(credentials.getEmail(), credentials.getPassword(), credentials.getAuthorities());
     }
 }
