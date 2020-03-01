@@ -35,6 +35,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(springUserService).passwordEncoder(bCryptPasswordEncoder);
     }
-
-
 }

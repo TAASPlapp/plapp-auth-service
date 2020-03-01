@@ -48,7 +48,6 @@ public class AuthenticationService {
         ResourceAuthority writeCredentialsAuthority = new ResourceAuthority();
         writeCredentialsAuthority.setAuthority("/auth/([0-9]+)/((\bupdate\b)|(\bremove))");
         writeCredentialsAuthority.addValue(savedCredentials.getId());
-        writeCredentialsAuthority.addValue(5656L);
         writeCredentialsAuthority.setUserId(savedCredentials.getId());
         resourceAuthorityRepository.save(writeCredentialsAuthority);
 
