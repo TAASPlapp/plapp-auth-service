@@ -21,7 +21,7 @@ public class JWTAuthenticationManager {
     private final JWTAuthenticationProperties properties;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public String buildJWT(UserCredentials credentials, Collection<? extends GrantedAuthority> authorities) throws JsonProcessingException  {
+    public String buildJWT(Long userId, Collection<? extends GrantedAuthority> authorities) throws JsonProcessingException  {
         long currentMillis = System.currentTimeMillis();
         Date now = new Date(currentMillis);
 
@@ -31,9 +31,9 @@ public class JWTAuthenticationManager {
 
         String authoritiesString = objectMapper.writeValueAsString(authorities);
 
-        JwtBuilder jwtBuilder = Jwts.builder().setId(String.valueOf(credentials.getId()))
+        JwtBuilder jwtBuilder = Jwts.builder().setId(UUID.randomUUID().toString())
                                               .setIssuedAt(now)
-                                              .setSubject(String.valueOf(credentials.getId()))
+                                              .setSubject(String.valueOf(userId))
                                               .claim("authorities", authoritiesString)
                                               .signWith(signingKey);
 
@@ -45,9 +45,9 @@ public class JWTAuthenticationManager {
         return jwtBuilder.compact();
     }
 
-    public void verifyJwt(String jwt) throws JwtException {
-        Jwts.parser()
-           .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getSigningKey()))
-           .parseClaimsJws(jwt);
+    public Jws<Claims> decodeJwt(String jwt) throws JwtException {
+        return Jwts.parser()
+                   .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getSigningKey()))
+                   .parseClaimsJws(jwt);
     }
 }

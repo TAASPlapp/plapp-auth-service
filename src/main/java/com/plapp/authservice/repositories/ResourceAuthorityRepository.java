@@ -8,4 +8,5 @@ import java.util.List;
 public interface ResourceAuthorityRepository extends JpaRepository<ResourceAuthority, Integer> {
     List<ResourceAuthority> findAllByAuthority(String authority);
     List<ResourceAuthority> findAllByUserId(long userId);
+    ResourceAuthority findByUserIdAndAuthority(long userId, String authority);
 }

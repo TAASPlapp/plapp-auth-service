@@ -49,16 +49,4 @@ public class AuthenticationController {
             return new ApiResponse<>(false, "Could not load user authorities");
         }
     }
-
-
-    /*@PostMapping("/authorize")
-    public ApiResponse authorize(@RequestBody String jwt) {
-        try {
-            userCredentialsService.verifyJwt(jwt);
-            return new ApiResponse();
-
-        } catch (JwtException e) {
-            return new ApiResponse(false, "Invalid token");
-        }
-    }*/
 }
