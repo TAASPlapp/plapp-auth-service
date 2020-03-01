@@ -38,13 +38,6 @@ public class AuthenticationService {
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
         UserCredentials savedCredentials = userCredentialsRepository.save(userCredentials);
 
-
-        try {
-            System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(savedCredentials));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         ResourceAuthority writeCredentialsAuthority = new ResourceAuthority();
         writeCredentialsAuthority.setAuthority("/auth/([0-9]+)/((\bupdate\b)|(\bremove))");
         writeCredentialsAuthority.addValue(savedCredentials.getId());
@@ -68,14 +61,8 @@ public class AuthenticationService {
         ));
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        try {
-            System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(authorities));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
         UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
+
         return jwtAuthenticationManager.buildJWT(existingUser, authorities);
     }
 }
