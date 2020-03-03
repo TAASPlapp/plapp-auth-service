@@ -7,4 +7,14 @@
             </id>
         </attributes>
     </entity>
+
+    <entity class="com.plapp.authservice.entities.ResourceAuthority" name="ResourceAuthority">
+        <attributes>
+            <id name="authorityId">
+                <generated-value />
+            </id>
+
+            <element-collection name="values" />
+        </attributes>
+    </entity>
 </entity-mappings>
