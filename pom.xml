@@ -105,7 +105,13 @@
         <dependency>
             <groupId>com.github.TAASPlapp</groupId>
             <artifactId>plapp-data-entities</artifactId>
-            <version>3f9661bab7</version>
+            <version>afdb4ac3f6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.TAASPlapp</groupId>
+            <artifactId>plapp-authorization-filter</artifactId>
+            <version>89d4ece2c0</version>
         </dependency>
 
     </dependencies>

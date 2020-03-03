@@ -1,8 +1,8 @@
 package com.plapp.authservice.services;
 
+import com.plapp.authorization.ResourceAuthority;
 import com.plapp.authservice.repositories.ResourceAuthorityRepository;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
-import com.plapp.entities.auth.ResourceAuthority;
 import com.plapp.entities.auth.UserCredentials;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

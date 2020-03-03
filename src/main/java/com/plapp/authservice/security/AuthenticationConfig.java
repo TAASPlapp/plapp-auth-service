@@ -1,5 +1,7 @@
 package com.plapp.authservice.security;
 
+import com.plapp.authorization.AuthorizationConfig;
+import com.plapp.authorization.JWTAuthorizationRegexFilter;
 import com.plapp.authservice.services.SpringUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 @Order(1)
 @RequiredArgsConstructor
-public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
+public class AuthenticationConfig extends AuthorizationConfig {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SpringUserService springUserService;
@@ -33,7 +35,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                              .antMatchers("/auth/login", "/auth/signup")
                              .permitAll()

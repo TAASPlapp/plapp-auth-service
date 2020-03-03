@@ -1,6 +1,6 @@
 package com.plapp.authservice.repositories;
 
-import com.plapp.entities.auth.ResourceAuthority;
+import com.plapp.authorization.ResourceAuthority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
