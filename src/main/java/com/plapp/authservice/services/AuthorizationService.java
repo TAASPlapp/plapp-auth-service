@@ -1,10 +1,9 @@
 package com.plapp.authservice.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.plapp.authservice.entities.ResourceAuthority;
 import com.plapp.authservice.repositories.ResourceAuthorityRepository;
 import com.plapp.authservice.security.JWTAuthenticationManager;
-import com.plapp.entities.auth.UserCredentials;
+import com.plapp.entities.auth.ResourceAuthority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

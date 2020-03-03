@@ -1,7 +1,6 @@
 package com.plapp.authservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.plapp.authservice.entities.ResourceAuthority;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

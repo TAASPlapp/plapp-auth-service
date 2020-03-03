@@ -8,7 +8,7 @@
         </attributes>
     </entity>
 
-    <entity class="com.plapp.authservice.entities.ResourceAuthority" name="ResourceAuthority">
+    <entity class="com.plapp.entities.auth.ResourceAuthority" name="ResourceAuthority">
         <attributes>
             <id name="authorityId">
                 <generated-value />

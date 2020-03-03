@@ -1,24 +1,17 @@
 package com.plapp.authservice.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.plapp.authservice.entities.ResourceAuthority;
-import com.plapp.authservice.repositories.ResourceAuthorityRepository;
-import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import com.plapp.entities.auth.UserCredentials;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
