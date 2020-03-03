@@ -1,6 +1,7 @@
 package com.plapp.authservice.security;
 
 import com.plapp.authservice.services.SpringUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,13 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @Order(1)
+@RequiredArgsConstructor
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private SpringUserService springUserService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SpringUserService springUserService;
 
     @Bean
     public AuthenticationManager getAuthenticationManager() throws Exception {
