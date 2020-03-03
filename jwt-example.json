@@ -1,0 +1,8 @@
+{
+    "sub": 1234,
+    "permissions": {
+	"/plant/([0-9]+)/((\bupdate\b)|(\bremove\b))": [ 23, 24, 57 ],
+	"/storyboard/([0-9]+)/((\bupdate\b)|(\bremove\b)|(\bitem/add\b))": [ 645, 341, 90 ],
+    	"/storyboard/item/([0-9]+)/remove": [11, 12, 13, 14, 67, 89, 90]
+    }
+}
