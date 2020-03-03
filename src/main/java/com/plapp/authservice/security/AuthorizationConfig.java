@@ -8,13 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
+@Order(2)
 public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                .antMatchers("/auth/login", "/auth/signup").permitAll()
-                .anyRequest().authenticated()
-                .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager()));
+        http.authorizeRequests()
+            .anyRequest().authenticated()
+            .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager()));
     }
 }
