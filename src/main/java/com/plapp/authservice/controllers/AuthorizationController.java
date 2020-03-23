@@ -1,8 +1,14 @@
 package com.plapp.authservice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.plapp.authorization.ResourceAuthority;
+import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.authservice.services.AuthorizationService;
 import com.plapp.entities.utils.ApiResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwt;
+import jdk.internal.loader.Resource;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.HibernateException;
 import org.springframework.web.bind.annotation.*;
@@ -13,37 +19,27 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
+    private final JWTAuthenticationManager jwtAuthenticationManager;
 
     @PostMapping("/{userId}/update")
-    public ApiResponse<String> updateAuthorization(@PathVariable Long userId,
-                                                   @RequestParam String urlRegex,
-                                                   @RequestParam Long value) {
-        try {
-            authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
-            String jwt = authorizationService.buildJwtWithAuthorizations(userId);
-            return new ApiResponse<>(true, null, jwt);
-
-        } catch (JsonProcessingException e) {
-            return new ApiResponse<>(false,"Could not load user authorities");
-        } catch (HibernateException e) {
-            return new ApiResponse<>(false, "Could not update authority");
-        }
+    public ResourceAuthority updateAuthorization(@PathVariable Long userId,
+                                                 @RequestParam String urlRegex,
+                                                 @RequestParam Long value) {
+        return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
     }
 
     @PostMapping("/{userId}/remove")
-    public ApiResponse<String> removeAuthorization(@PathVariable long userId,
+    public void removeAuthorization(@PathVariable long userId,
                                                    @RequestParam String urlRegex,
                                                    @RequestParam long value) {
-        try {
-            authorizationService.removeResourceAuthorityValue(userId, urlRegex, value);
-            String jwt = authorizationService.buildJwtWithAuthorizations(userId);
-            return new ApiResponse<>(true, null, jwt);
+        authorizationService.removeResourceAuthorityValue(userId, urlRegex, value);
 
-        } catch (JsonProcessingException e) {
-            return new ApiResponse<>(false,"Could not load user authorities");
-        } catch (HibernateException e) {
-            return new ApiResponse<>(false, "Could not remove authority value");
-        }
     }
 
+    @PostMapping("/jwt/fetch")
+    public String generateUpdatedJwt(@RequestBody String jwt) throws JsonProcessingException {
+        Jws<Claims> claims = jwtAuthenticationManager.decodeJwt(jwt);
+        Long userId = Long.valueOf(claims.getBody().getSubject());
+        return authorizationService.buildJwtWithAuthorizations(userId);
+    }
 }
