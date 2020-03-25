@@ -4,13 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.plapp.authorization.ResourceAuthority;
 import com.plapp.authservice.security.JWTAuthenticationManager;
 import com.plapp.authservice.services.AuthorizationService;
-import com.plapp.entities.utils.ApiResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
-import jdk.internal.loader.Resource;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
