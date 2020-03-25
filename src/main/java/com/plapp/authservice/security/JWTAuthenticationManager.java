@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
@@ -28,7 +29,10 @@ public class JWTAuthenticationManager {
     @PostConstruct
     public void readPrivateKey() throws Exception {
         String path = new ClassPathResource("private.der").getFile().getAbsolutePath();
-        byte[] keyBytes = Files.readAllBytes(Paths.get(path));
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("private.der");
+        byte[] keyBytes = new byte[inputStream.available()]; //Files.readAllBytes(Paths.get(path));
+        inputStream.read(keyBytes);
+
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         privateKey = keyFactory.generatePrivate(keySpec);
