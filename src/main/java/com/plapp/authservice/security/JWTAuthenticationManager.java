@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -23,13 +25,16 @@ import java.util.*;
 public class JWTAuthenticationManager {
     private final JWTAuthenticationProperties properties;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(JWTAuthenticationManager.class);
 
     private PrivateKey privateKey;
 
     @PostConstruct
     public void readPrivateKey() throws Exception {
-        String path = new ClassPathResource("private.der").getFile().getAbsolutePath();
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("private.der");
+        String url = "https://github.com/TAASPlapp/plapp-auth-service/raw/master/src/main/resources/private.der";
+
+        logger.info("Loading public key file from " + url);
+        InputStream inputStream = new URL(url).openStream();
         byte[] keyBytes = new byte[inputStream.available()]; //Files.readAllBytes(Paths.get(path));
         inputStream.read(keyBytes);
 
