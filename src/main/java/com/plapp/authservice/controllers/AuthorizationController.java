@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -22,10 +24,9 @@ public class AuthorizationController {
 
     @PostMapping("/{userId}/update")
     public ResourceAuthority updateAuthorization(@PathVariable Long userId,
-                                                 @RequestParam String urlRegex,
-                                                 @RequestParam Long value) {
+                                                 @RequestBody ResourceAuthority resourceAuthority) {
         logger.info("Adding authority for user " + userId);
-        return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
+        return authorizationService.addResourceAuthority(resourceAuthority);
     }
 
     @PostMapping("/{userId}/remove")
