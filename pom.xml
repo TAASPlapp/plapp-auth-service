@@ -111,7 +111,7 @@
         <dependency>
             <groupId>com.github.TAASPlapp</groupId>
             <artifactId>plapp-authorization-filter</artifactId>
-            <version>89d4ece2c0</version>
+            <version>9a18628dc6</version>
         </dependency>
 
     </dependencies>
