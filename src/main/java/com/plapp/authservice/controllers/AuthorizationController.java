@@ -7,12 +7,15 @@ import com.plapp.authservice.services.AuthorizationService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthorizationController {
+    private final Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
     private final AuthorizationService authorizationService;
     private final JWTAuthenticationManager jwtAuthenticationManager;
@@ -21,6 +24,7 @@ public class AuthorizationController {
     public ResourceAuthority updateAuthorization(@PathVariable Long userId,
                                                  @RequestParam String urlRegex,
                                                  @RequestParam Long value) {
+        logger.info("Adding authority for user " + userId);
         return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
     }
 
