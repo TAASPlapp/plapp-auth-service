@@ -1,6 +1,7 @@
 package com.plapp.authservice.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.plapp.authorization.ResourceAuthority;
 import com.plapp.authservice.repositories.UserCredentialsRepository;
 import com.plapp.entities.auth.UserCredentials;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,12 @@ public class AuthenticationService {
 
         // Add default permission so that jwt will be able to later update
         // granted authorities
-        authorizationService.addResourceAuthority(
-                savedCredentials.getId(),
+        ResourceAuthority updateResourceAuthority = new ResourceAuthority(
                 "/auth/([0-9]+)/((\\bupdate\\b)|(\\bremove\\b))",
-                new ArrayList<Long>(){{ add(savedCredentials.getId()); }});
+                savedCredentials.getId()
+        );
+        updateResourceAuthority.addValue(savedCredentials.getId());
+        authorizationService.addResourceAuthority(updateResourceAuthority);
 
 
         return savedCredentials;

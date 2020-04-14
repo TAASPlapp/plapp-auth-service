@@ -19,12 +19,7 @@ public class AuthorizationService {
         return resourceAuthorityRepository.save(resourceAuthority);
     }
 
-    public ResourceAuthority addResourceAuthority(Long userId, String urlRegex, List<Long> values) {
-        ResourceAuthority resourceAuthority = new ResourceAuthority();
-        resourceAuthority.setAuthority(urlRegex);
-        resourceAuthority.setUserId(userId);
-        values.forEach(resourceAuthority::addValue);
-
+    public ResourceAuthority addResourceAuthority(ResourceAuthority resourceAuthority) {
         return saveResourceAuthority(resourceAuthority);
     }
 
