@@ -34,7 +34,7 @@ public class JWTAuthenticationManager {
     public void readPrivateKey() throws Exception {
         String url = "https://github.com/TAASPlapp/plapp-auth-service/raw/master/src/main/resources/private.der";
 
-        logger.info("Loading public key file from " + url);
+        logger.info("Loading private key file from " + url);
         InputStream inputStream = new URL(url).openStream();
         byte[] keyBytes = new byte[inputStream.available()]; //Files.readAllBytes(Paths.get(path));
         inputStream.read(keyBytes);
