@@ -1,9 +1,11 @@
 package com.plapp.authservice.security;
 
-import com.plapp.authorization.AuthorizationConfig;
 import com.plapp.authorization.JWTAuthorizationRegexFilter;
 import com.plapp.authservice.services.SpringUserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -11,13 +13,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 @Order(1)
 @RequiredArgsConstructor
-public class AuthenticationConfig extends AuthorizationConfig {
+@Getter
+@Setter
+public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
+    @Value("${security.public-key}")
+    private String publicKey;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SpringUserService springUserService;
@@ -37,6 +44,6 @@ public class AuthenticationConfig extends AuthorizationConfig {
         http.csrf().disable().authorizeRequests()
                              .antMatchers("/auth/*").permitAll()
                              .anyRequest().authenticated()
-                             .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager()));
+                             .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager(), this.publicKey));
     }
 }
