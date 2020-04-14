@@ -67,7 +67,7 @@ public class JWTAuthenticationManager {
 
     public Jws<Claims> decodeJwt(String jwt) throws JwtException {
         return Jwts.parser()
-                   .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getPrivateKey()))
+                   .setSigningKey(privateKey)
                    .parseClaimsJws(jwt);
     }
 }
