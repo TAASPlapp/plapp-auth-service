@@ -32,11 +32,13 @@ public class JWTAuthenticationManager {
 
     @PostConstruct
     public void readPrivateKey() throws Exception {
-        String url = "https://github.com/TAASPlapp/plapp-auth-service/raw/master/src/main/resources/private.der";
+        //String url = "https://github.com/TAASPlapp/plapp-auth-service/blob/master/src/main/resources/private.der?raw=true";
+        //logger.info("Loading private key file from " + url);
+        //InputStream inputStream = new URL(url).openStream();
 
-        logger.info("Loading private key file from " + url);
-        InputStream inputStream = new URL(url).openStream();
-        byte[] keyBytes = new byte[inputStream.available()]; //Files.readAllBytes(Paths.get(path));
+        InputStream inputStream = new ClassPathResource("private.der").getInputStream();
+        logger.info("Loading private key from classpath, available bytes: " + inputStream.available());
+        byte[] keyBytes = new byte[inputStream.available()];
         inputStream.read(keyBytes);
 
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
