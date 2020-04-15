@@ -33,7 +33,7 @@ public class AuthenticationService {
         // Add default permission so that jwt will be able to later update
         // granted authorities
         ResourceAuthority updateResourceAuthority = new ResourceAuthority(
-                "/auth/([0-9]+)/((\\bupdate\\b)|(\\bremove\\b))",
+                "/auth/([0-9]+)/((\\bupdate\\b)|(\\bremove\\b)|(\\bdelete\\b))",
                 savedCredentials.getId()
         );
         updateResourceAuthority.addValue(savedCredentials.getId());
