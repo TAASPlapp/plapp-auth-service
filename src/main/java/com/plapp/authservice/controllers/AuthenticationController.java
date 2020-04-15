@@ -25,9 +25,10 @@ public class AuthenticationController {
 
     @ControllerAdvice
     public static class AuthenticationControllerAdvice extends ResponseEntityExceptionHandler {
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler({IllegalArgumentException.class})
-        public void handleIllegalArgumentException() { }
+        public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e, WebRequest request) {
+            return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        }
 
         /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         @ExceptionHandler({HibernateException.class})
