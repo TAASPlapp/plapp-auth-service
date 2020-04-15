@@ -61,4 +61,7 @@ public class AuthenticationService {
         UserCredentials existingUser = userCredentialsRepository.findByEmail(credentials.getEmail());
         return authorizationService.buildJwtWithAuthorizations(existingUser.getId());
     }
+    public void deleteUser(UserCredentials credentials) {
+        userCredentialsRepository.delete(credentials);
+    }
 }

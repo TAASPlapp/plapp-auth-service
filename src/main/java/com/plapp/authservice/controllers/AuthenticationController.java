@@ -51,4 +51,10 @@ public class AuthenticationController {
             throw new IllegalArgumentException(e);
         }
     }
+
+    @PostMapping("/{userId}/delete")
+    public void delete(@PathVariable long userId, @RequestBody UserCredentials credentials) {
+        credentials.setId(userId);
+        userCredentialsService.deleteUser(credentials);
+    }
 }
