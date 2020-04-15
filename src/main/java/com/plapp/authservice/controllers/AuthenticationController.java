@@ -24,12 +24,10 @@ public class AuthenticationController {
     private final AuthenticationService userCredentialsService;
 
     @ControllerAdvice
-    public static class GreenhouseControllerAdvice extends ResponseEntityExceptionHandler {
+    public static class AuthenticationControllerAdvice extends ResponseEntityExceptionHandler {
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler({IllegalArgumentException.class})
-        public ResponseEntity<Object> handle(RuntimeException e, WebRequest request) {
-            return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-        }
+        public void handleIllegalArgumentException() { }
 
         /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         @ExceptionHandler({HibernateException.class})
