@@ -4,12 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
+import java.io.DataInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
@@ -22,13 +27,20 @@ import java.util.*;
 public class JWTAuthenticationManager {
     private final JWTAuthenticationProperties properties;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Logger logger = LoggerFactory.getLogger(JWTAuthenticationManager.class);
 
     private PrivateKey privateKey;
 
     @PostConstruct
     public void readPrivateKey() throws Exception {
-        String path = new ClassPathResource("private.der").getFile().getAbsolutePath();
-        byte[] keyBytes = Files.readAllBytes(Paths.get(path));
+        InputStream inputStream = new ClassPathResource("private.der").getInputStream();
+        DataInputStream dataInputStream = new DataInputStream(inputStream);
+        int availableBytes = dataInputStream.available();
+
+        logger.info("Loading private key from classpath, available bytes: " + availableBytes);
+        byte[] keyBytes = new byte[availableBytes];
+        dataInputStream.readFully(keyBytes);
+
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         privateKey = keyFactory.generatePrivate(keySpec);
@@ -55,7 +67,7 @@ public class JWTAuthenticationManager {
 
     public Jws<Claims> decodeJwt(String jwt) throws JwtException {
         return Jwts.parser()
-                   .setSigningKey(DatatypeConverter.parseBase64Binary(properties.getPrivateKey()))
+                   .setSigningKey(privateKey)
                    .parseClaimsJws(jwt);
     }
 }

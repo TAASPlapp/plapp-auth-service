@@ -24,16 +24,14 @@ public class AuthenticationController {
     private final AuthenticationService userCredentialsService;
 
     @ControllerAdvice
-    public static class GreenhouseControllerAdvice extends ResponseEntityExceptionHandler {
+    public static class AuthenticationControllerAdvice extends ResponseEntityExceptionHandler {
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler({IllegalArgumentException.class})
-        public ResponseEntity<Object> handle(RuntimeException e, WebRequest request) {
-            return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-        }
+        public void handleIllegalArgumentException() { }
 
-        @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         @ExceptionHandler({HibernateException.class})
-        public void handle() {}
+        public void handle() {}*/
     }
 
     @PostMapping("/signup")
@@ -52,5 +50,11 @@ public class AuthenticationController {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @PostMapping("/{userId}/delete")
+    public void delete(@PathVariable long userId, @RequestBody UserCredentials credentials) {
+        credentials.setId(userId);
+        userCredentialsService.deleteUser(credentials);
     }
 }
