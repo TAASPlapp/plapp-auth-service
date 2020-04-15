@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class AuthenticationController {
     private final AuthenticationService userCredentialsService;
 
-    /*@ControllerAdvice
+    @ControllerAdvice
     public static class GreenhouseControllerAdvice extends ResponseEntityExceptionHandler {
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler({IllegalArgumentException.class})
@@ -31,10 +31,10 @@ public class AuthenticationController {
             return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         }
 
-        @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        /*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
         @ExceptionHandler({HibernateException.class})
-        public void handle() {}
-    }*/
+        public void handle() {}*/
+    }
 
     @PostMapping("/signup")
     public UserCredentials signUp(@RequestBody UserCredentials credentials) {
