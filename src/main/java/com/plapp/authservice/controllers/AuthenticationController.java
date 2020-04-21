@@ -54,7 +54,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/{userId}/delete")
-    public void delete(@PathVariable long userId, @RequestBody UserCredentials credentials) {
+    public void delete(@PathVariable Long userId, @RequestBody UserCredentials credentials) {
         credentials.setId(userId);
         userCredentialsService.deleteUser(credentials);
     }
