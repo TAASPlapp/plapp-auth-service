@@ -33,15 +33,15 @@ public class AuthorizationController {
     }
 
     @PostMapping("/{userId}/remove")
-    public void removeAuthorization(@PathVariable long userId,
+    public void removeAuthorization(@PathVariable Long userId,
                                     @RequestParam String urlRegex,
-                                    @RequestParam long value) {
+                                    @RequestParam Long value) {
         authorizationService.removeResourceAuthorityValue(userId, urlRegex, value);
 
     }
 
     @GetMapping("/{userId}/authorities")
-    public List<ResourceAuthority> getAuthorities(@PathVariable long userId) {
+    public List<ResourceAuthority> getAuthorities(@PathVariable Long userId) {
         return authorizationService.getAuthorities(userId);
     }
 
