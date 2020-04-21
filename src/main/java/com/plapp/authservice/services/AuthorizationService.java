@@ -50,4 +50,8 @@ public class AuthorizationService {
         List<ResourceAuthority> authorities = resourceAuthorityRepository.findAllByUserId(userId);
         return jwtAuthenticationManager.buildJWT(userId, authorities);
     }
+
+    public List<ResourceAuthority> getAuthorities(Long userId) {
+        return resourceAuthorityRepository.findAllByUserId(userId);
+    }
 }

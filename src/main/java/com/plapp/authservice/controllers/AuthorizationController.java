@@ -9,9 +9,11 @@ import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,19 +24,34 @@ public class AuthorizationController {
     private final AuthorizationService authorizationService;
     private final JWTAuthenticationManager jwtAuthenticationManager;
 
-    @PostMapping("/{userId}/update")
-    public ResourceAuthority updateAuthorization(@PathVariable Long userId,
-                                                 @RequestBody ResourceAuthority resourceAuthority) {
+    @PostMapping("/{userId}/add")
+    public ResourceAuthority addAuthority(@PathVariable Long userId,
+                                          @RequestBody ResourceAuthority resourceAuthority) {
         logger.info("Adding authority for user " + userId);
+        resourceAuthority.setUserId(userId);
         return authorizationService.addResourceAuthority(resourceAuthority);
     }
 
     @PostMapping("/{userId}/remove")
     public void removeAuthorization(@PathVariable long userId,
-                                                   @RequestParam String urlRegex,
-                                                   @RequestParam long value) {
+                                    @RequestParam String urlRegex,
+                                    @RequestParam long value) {
         authorizationService.removeResourceAuthorityValue(userId, urlRegex, value);
 
+    }
+
+    @GetMapping("/{userId}/authorities")
+    public List<ResourceAuthority> getAuthorities(@PathVariable long userId) {
+        return authorizationService.getAuthorities(userId);
+    }
+
+    @PostMapping("/update")
+    public ResourceAuthority updateAuthority(@RequestBody Map<String, Object> params) {
+        String urlRegex = (String)params.get("urlRegex");
+        Long value = (Long)params.get("value");
+        System.out.println("PRINCIPAL: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Long userId = (Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
     }
 
     @PostMapping("/jwt/fetch")

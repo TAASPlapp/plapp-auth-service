@@ -8,7 +8,7 @@ services:
     image: postgres:latest
     container_name: plapp-auth-db
     ports:
-      - "5433:5432"
+      - "5434:5432"
     env_file:
       - postgres.env
     volumes:
@@ -40,7 +40,7 @@ services:
     depends_on:
       - plapp-auth-service
     ports:
-      - "4000:4000"
+      - "4001:4000"
     networks:
       - auth-network
 
