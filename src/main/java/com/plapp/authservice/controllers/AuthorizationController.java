@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -45,7 +46,9 @@ public class AuthorizationController {
     }
 
     @PostMapping("/update")
-    public ResourceAuthority updateAuthority(@RequestParam String urlRegex, @RequestParam Long value) {
+    public ResourceAuthority updateAuthority(@RequestBody Map<String, Object> params) {
+        String urlRegex = (String)params.get("urlRegex");
+        Long value = (Long)params.get("value");
         System.out.println("PRINCIPAL: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Long userId = (Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
