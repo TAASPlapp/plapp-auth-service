@@ -51,6 +51,7 @@ public class AuthorizationController {
         Integer value = (Integer)params.get("value");
         System.out.println("PRINCIPAL: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Long userId = (Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info(String.format("Adding value %d to authority %s", value, urlRegex));
         return authorizationService.addResourceAuthorityValue(userId, urlRegex, value.longValue());
     }
 
