@@ -43,7 +43,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                              .antMatchers("/auth/*").permitAll()
-                             .anyRequest().authenticated()
+                             .antMatchers("/auth/*/delete").authenticated()
+                             .antMatchers("/**").authenticated()
                              .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager(), this.publicKey));
     }
 }

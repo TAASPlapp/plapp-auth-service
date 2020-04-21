@@ -48,10 +48,10 @@ public class AuthorizationController {
     @PostMapping("/update")
     public ResourceAuthority updateAuthority(@RequestBody Map<String, Object> params) {
         String urlRegex = (String)params.get("urlRegex");
-        Long value = (Long)params.get("value");
+        Integer value = (Integer)params.get("value");
         System.out.println("PRINCIPAL: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Long userId = (Long)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return authorizationService.addResourceAuthorityValue(userId, urlRegex, value);
+        return authorizationService.addResourceAuthorityValue(userId, urlRegex, value.longValue());
     }
 
     @PostMapping("/jwt/fetch")
