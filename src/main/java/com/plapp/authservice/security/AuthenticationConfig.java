@@ -41,9 +41,9 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                             .antMatchers("/auth/*").permitAll()
-                             .antMatchers("/auth/*/delete").authenticated()
+        http.cors().and().csrf().disable().authorizeRequests()
+                             .antMatchers("/auth/login").permitAll()
+                             .antMatchers("/auth/signup").permitAll()
                              .antMatchers("/**").authenticated()
                              .and().addFilter(new JWTAuthorizationRegexFilter(authenticationManager(), this.publicKey));
     }
